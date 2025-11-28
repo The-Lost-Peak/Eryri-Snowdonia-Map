@@ -10,63 +10,35 @@
     html, body { margin:0; height:100% }
     #map { position:absolute; inset:0 }
 
-    .mapboxgl-ctrl-logo,
-    .mapboxgl-ctrl-attrib,
-    .mapboxgl-ctrl-attrib-inner { display:none !important; visibility:hidden !important; }
-
+    .mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib, .mapboxgl-ctrl-attrib-inner { display:none !important; visibility:hidden !important; }
     .marker{ cursor:pointer !important }
     .marker svg{ transform:scale(0.85); transform-origin:center }
-
     .mapboxgl-popup{ filter:drop-shadow(0 14px 28px rgba(0,0,0,.45)) }
     .mapboxgl-popup-tip{ display:none !important }
 
     .mapboxgl-popup-content{
-      background:transparent !important;
-      border:none !important;
-      padding:0 !important;
-      box-shadow:none !important;
-      width:auto !important;
-      overflow:visible !important;
-      display:block;
-      box-sizing:border-box;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important;
-      text-transform:capitalize;
+      background:transparent !important; border:none !important; padding:0 !important; box-shadow:none !important;
+      width:auto !important; overflow:visible !important; display:block; box-sizing:border-box;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif !important; text-transform:capitalize;
     }
-
-    .popup-card{
-      display:flex; align-items:stretch; background:#fff; border-radius:12px; overflow:hidden;
-      width:fit-content; height:130px;
-    }
+    .popup-card{ display:flex; align-items:stretch; background:#fff; border-radius:12px; overflow:hidden; width:fit-content; height:130px; }
     .img-wrap{ width:140px; flex:0 0 140px; height:100%; border-radius:12px 0 0 12px; overflow:hidden; background:#000 }
     .img-wrap img{ width:100%; height:100%; object-fit:cover; display:block }
-
-    .popup-body{
-      box-sizing:border-box; padding:8px 12px 10px 10px;
-      flex:0 0 140px; min-width:140px; max-width:140px;
-      text-align:center; display:flex; flex-direction:column; justify-content:center; line-height:1.2;
-      transform: translateY(-1px);
-    }
+    .popup-body{ box-sizing:border-box; padding:8px 12px 10px 10px; flex:0 0 140px; min-width:140px; max-width:140px; text-align:center; display:flex; flex-direction:column; justify-content:center; line-height:1.2; transform: translateY(-1px); }
     .popup-heading{ font-weight:800; font-size:11px; margin:2px 0 6px 0; color:#1E1E1E }
-
     .specs{ font-size:10px; display:flex; flex-direction:column; gap:3px; align-items:center; transform: translateY(1px); margin-top:2px }
     .stats-group{ transform:translateY(-2px); display:flex; flex-direction:column; gap:3px; align-items:center }
     .links-group{ display:flex; flex-direction:column; gap:3px; align-items:center }
-
     .spec-row{ display:flex; align-items:center; justify-content:center; gap:4px }
     .icon{ width:16px; height:16px }
     .icon-red{ color:#EC2629 } .icon-blue{ color:#3899EC }
     .icon-img{ width:12px; height:12px; display:block; filter: invert(41%) sepia(97%) saturate(1476%) hue-rotate(191deg) brightness(96%) contrast(101%) }
-
     .spec-value{ font-weight:800; color:#EC2629; font-size:11px }
     .popup-link{ color:#3899EC; font-weight:800; font-size:11px; text-decoration:none; outline:none !important; border:none !important; box-shadow:none !important }
     .popup-link:focus, .popup-link:focus-visible, .popup-link:active{ outline:none !important; border:none !important; box-shadow:none !important }
-
     .hike-gap{ margin-top:2px }
 
-    .mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon {
-      transform: scale(0.88);
-      transform-origin: center;
-    }
+    .mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon { transform: scale(0.88); transform-origin: center; }
 
     @media (max-width:440px){
       .img-wrap{ width:120px; flex-basis:120px }
@@ -83,66 +55,47 @@
 mapboxgl.accessToken="pk.eyJ1IjoicmVtbWlhZ2JlYmkiLCJhIjoiY21odHRrYTQzMTk0bjJqcjE1b2xhZ2FraSJ9.nTCz33gX0gQt3T4A6VD0oQ";
 
 const RED="#EC2629", BLUE="#3899EC";
+
+// UPDATED image filenames to match your repo
 const IMG={
-  derwent:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/derwent-dam-tower.jpg",
-  crashed:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/b29-overexposed-crash-site.jpg",
-  kinder:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/kinder-scout-carved-rock.png"
+  snowdon:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/snowdon-toposcope.jpeg",
+  idwal:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/llyn-cwm-idwal.jpg",
+  llynDinas:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/llyn-dinas.jpg"
 };
 
-const hikes=[
-  { id:"derwent-edge", name:"Derwent Edge", coords:[-1.7427849606990842,53.400582126300236],
-    hikeUrl:"https://thelostpeak.co.uk/hikes/derwent-edge",
-    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.400582126300236,-1.7427849606990842",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Derwent%20Edge.gpx",
-    photo:IMG.derwent, specs:{ duration:"3 to 4 hours", length:"7.4 miles", ascent:"367m" } },
-  { id:"crashed-plane", name:"Crashed Plane Hike", coords:[-1.8689,53.4329],
-    hikeUrl:"https://thelostpeak.co.uk/hikes/crashed-plane",
-    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.4329,-1.8689",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/The%20Crashed%20Plane%20Hike.gpx",
-    photo:IMG.crashed, specs:{ duration:"2 to 3 hours", length:"3.6 miles", ascent:"145m" } },
-  { id:"kinder-scout", name:"Kinder Scout", coords:[-1.8151209383535991,53.364872107766416],
-    hikeUrl:"https://thelostpeak.co.uk/hikes/kinder-scout",
-    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.364872107766416,-1.8151209383535991",
-    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Kinder%20Scout%20Hike.gpx",
-    photo:IMG.kinder, specs:{ duration:"4 to 6 hours", length:"8.3 miles", ascent:"562m" } }
-];
-
+// UPDATED: center over Eryri
 const map=new mapboxgl.Map({
   container:"map",
   style:"mapbox://styles/mapbox/satellite-streets-v12",
-  center:[-1.78,53.41],
-  zoom:11,
+  center:[-4.02,53.08],
+  zoom:10.5,
   attributionControl:false
 });
 
+// Controls
 const nav = new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav, "bottom-right");
 const fs  = new mapboxgl.FullscreenControl();
 map.addControl(fs, "bottom-right");
 
+// Merge fullscreen into nav group
 function mergeFullscreenIntoNavOnce(){
   const corner = map.getContainer().querySelector('.mapboxgl-ctrl-bottom-right');
   if(!corner) return false;
-
   const navGroup = Array.from(corner.querySelectorAll('.mapboxgl-ctrl-group'))
     .find(g => g.querySelector('.mapboxgl-ctrl-zoom-in'));
   const fsBtn = corner.querySelector('button.mapboxgl-ctrl-fullscreen');
   if(!navGroup || !fsBtn) return false;
-
   const fsGroup = fsBtn.closest('.mapboxgl-ctrl-group');
   const zoomOut = navGroup.querySelector('.mapboxgl-ctrl-zoom-out');
   const compass = navGroup.querySelector('.mapboxgl-ctrl-compass');
 
-  if(zoomOut){
-    navGroup.insertBefore(fsBtn, compass ? compass : zoomOut.nextSibling);
-  } else {
-    navGroup.appendChild(fsBtn);
-  }
+  if(zoomOut){ navGroup.insertBefore(fsBtn, compass ? compass : zoomOut.nextSibling); }
+  else { navGroup.appendChild(fsBtn); }
 
   if(fsGroup && fsGroup !== navGroup && fsGroup.childElementCount === 0) fsGroup.remove();
   return true;
 }
-
 map.on('load', () => {
   let tries = 0;
   (function tryMerge(){
@@ -151,6 +104,7 @@ map.on('load', () => {
   })();
 });
 
+// Hover system
 const markerElsById={}, routeLayerId={}; let hoveredId=null;
 function setMarkerColor(id,c){ const el=markerElsById[id]; if(!el) return; const p=el.querySelector("svg path"); if(p) p.setAttribute("fill",c); }
 function setRouteColor(id,c){ const lyr=routeLayerId[id]; if(lyr && map.getLayer(lyr)) map.setPaintProperty(lyr,"line-color",c); }
@@ -169,6 +123,40 @@ const icons={
   walk:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/walking-person-go-walk-move-svgrepo-com.svg">`,
   directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/marker-svgrepo-com.svg">`
 };
+
+// UPDATED: hikes list (filenames URL-encoded where needed)
+const hikes=[
+  {
+    id:"snowdon-llanberis",
+    name:"Snowdon Via The Llanberis Path",
+    coords:[-4.1189, 53.1182],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/snowdon-llanberis",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.1182,-4.1189",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Snowdon%20Via%20The%20Llanberis%20Path.gpx",
+    photo:IMG.snowdon,
+    specs:{ duration:"5 to 7 hours", length:"9 miles", ascent:"975m" }
+  },
+  {
+    id:"cwm-idwal",
+    name:"Cwm Idwal Hike",
+    coords:[-3.9812, 53.1262],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/cwm-idwal",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.1262,-3.9812",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Cwm%20Idwal%20Hike.gpx",
+    photo:IMG.idwal,
+    specs:{ duration:"1.5 to 2.5 hours", length:"3 miles", ascent:"200m" }
+  },
+  {
+    id:"aberglaslyn",
+    name:"Aberglaslyn, Llyn Dinas & Beddgelert",
+    coords:[-4.0937, 53.0097],
+    hikeUrl:"https://thelostpeak.co.uk/hikes/aberglaslyn-llyn-dinas-beddgelert",
+    directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.0097,-4.0937",
+    gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Aberglaslyn%2C%20Llyn%20Dinas%20%26%20Beddgelert.gpx",
+    photo:IMG.llynDinas,
+    specs:{ duration:"2 to 3 hours", length:"4.5 miles", ascent:"220m" }
+  }
+];
 
 function specsHTML(s,u){
   return `
@@ -240,7 +228,7 @@ map.on("load", async () => {
     }catch(e){}
   }
 
-  map.fitBounds(bounds,{ padding:110, maxZoom:11 });
+  map.fitBounds(bounds,{ padding:110, maxZoom:12 });
 });
 </script>
 </body>
