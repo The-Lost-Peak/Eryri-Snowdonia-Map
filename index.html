@@ -37,6 +37,7 @@
       text-transform:capitalize;
     }
 
+    /* ===== DESKTOP POPUP (ERYRI ORIGINAL) ===== */
     .popup-card{
       display:flex;
       align-items:stretch;
@@ -46,7 +47,6 @@
       width:fit-content;
       height:130px;
     }
-
     .img-wrap{
       width:140px; flex:0 0 140px; height:100%;
       border-radius:12px 0 0 12px;
@@ -71,8 +71,8 @@
     .specs{ font-size:10px; display:flex; flex-direction:column; gap:3px; align-items:center; margin-top:2px; transform:translateY(1px); }
     .stats-group{ display:flex; flex-direction:column; gap:3px; align-items:center; transform:translateY(-2px); }
     .links-group{ display:flex; flex-direction:column; gap:3px; align-items:center; }
-
     .spec-row{ display:flex; align-items:center; justify-content:center; gap:4px }
+
     .icon{ width:16px; height:16px }
     .icon-red{ color:#EC2629 }
     .icon-blue{ color:#3899EC }
@@ -85,6 +85,7 @@
     .popup-link{ color:#3899EC; font-weight:800; font-size:11px; text-decoration:none }
     .hike-gap{ margin-top:2px }
 
+    /* ===== MOBILE POPUP (PEAK DISTRICT) ===== */
     @media(max-width:440px){
       .popup-card{ height:115px !important }
       .img-wrap{ width:105px !important; flex-basis:105px !important; height:115px !important }
@@ -103,6 +104,7 @@
       .icon-img{ width:9px !important; height:9px !important }
     }
 
+    /* ===== FULLSCREEN MOBILE POPUP (PEAK DISTRICT) ===== */
     @media(max-width:440px){
       body.ios-fullscreen .popup-card{ height:calc(115px * 1.15) !important }
       body.ios-fullscreen .img-wrap{
@@ -125,6 +127,7 @@
       body.ios-fullscreen .icon-img{ width:calc(9px * 1.15) !important; height:calc(9px * 1.15) !important }
     }
 
+    /* ===== SAFE +1PX FULLSCREEN TEXT ===== */
     @media(max-width:440px){
       body.ios-fullscreen .popup-heading{ font-size:calc(9.5px * 1.15 + 1px) !important }
       body.ios-fullscreen .specs{ font-size:calc(8.5px * 1.15 + 1px) !important }
@@ -132,6 +135,7 @@
       body.ios-fullscreen .popup-link{ font-size:calc(10px * 1.15 + 1px) !important }
     }
 
+    /* ===== REMOVE TAP/FOCUS HIGHLIGHTS GLOBALLY ===== */
     .popup-link,
     .popup-link:focus,
     .popup-link:active,
@@ -167,12 +171,12 @@ const IMG={
   llynDinas:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/llyn-dinas.jpg"
 };
 
-/* ===== UPDATED HIKES WITH NEW COORDINATES ===== */
+/* ===== HIKES (WITH UPDATED COORDS) ===== */
 const hikes=[
   {
     id:"snowdon-llanberis",
     name:"Snowdon Via The Llanberis Path",
-    coords:[-4.118924210708925, 53.11664400159144],  // UPDATED
+    coords:[-4.118924210708925, 53.11664400159144],
     hikeUrl:"https://thelostpeak.co.uk/hikes/snowdon-llanberis",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.11664400159144,-4.118924210708925",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Snowdon%20Via%20The%20Llanberis%20Path.gpx",
@@ -182,7 +186,7 @@ const hikes=[
   {
     id:"cwm-idwal",
     name:"Cwm Idwal Hike",
-    coords:[-4.020596516220583, 53.12408370096376],  // UPDATED
+    coords:[-4.020596516220583, 53.12408370096376],
     hikeUrl:"https://thelostpeak.co.uk/hikes/cwm-idwal",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.12408370096376,-4.020596516220583",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Cwm%20Idwal%20Hike.gpx",
@@ -192,7 +196,7 @@ const hikes=[
   {
     id:"aberglaslyn",
     name:"Aberglaslyn, Llyn Dinas & Beddgelert",
-    coords:[-4.091522763013294, 52.99473100666257],  // UPDATED
+    coords:[-4.091522763013294, 52.99473100666257],
     hikeUrl:"https://thelostpeak.co.uk/hikes/aberglaslyn-llyn-dinas-beddgelert",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=52.99473100666257,-4.091522763013294",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Aberglaslyn%2C%20Llyn%20Dinas%20%26%20Beddgelert.gpx",
@@ -201,50 +205,46 @@ const hikes=[
   }
 ];
 
+/* ===== MAP ===== */
 const map=new mapboxgl.Map({
   container:"map",
   style:"mapbox://styles/mapbox/satellite-streets-v12",
   center:[-4.02,53.08],
-  zoom:9,
+  zoom:10, /* initial zoom doesn't matter much because fitBounds overrides it */
   attributionControl:false
 });
 
-const nav = new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
-map.addControl(nav, "bottom-right");
-map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
+const nav=new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
+map.addControl(nav,"bottom-right");
+map.addControl(new mapboxgl.FullscreenControl(),"bottom-right");
 
+/* ===== FULLSCREEN (iOS SYSTEM FROM PEAK DISTRICT) ===== */
 function isIOS(){
-  const ua = navigator.userAgent || "";
-  const platform = navigator.platform || "";
-  return /iPad|iPhone|iPod/.test(ua) || (platform==="MacIntel" && navigator.maxTouchPoints>1);
+  const ua=navigator.userAgent||"";
+  const platform=navigator.platform||"";
+  return /iPad|iPhone|iPod/.test(ua)||(platform==="MacIntel"&&navigator.maxTouchPoints>1);
 }
 const params=new URLSearchParams(location.search);
 
-if(isIOS() && params.get("fs")==="1"){
+if(isIOS()&&params.get("fs")==="1"){
   document.body.classList.add("ios-fullscreen");
-
-  const hide=()=>{
-    const el=document.querySelector('.mapboxgl-ctrl-fullscreen');
-    if(el) el.style.display='none';
-  };
+  const hide=()=>{ const el=document.querySelector('.mapboxgl-ctrl-fullscreen'); if(el) el.style.display='none'; };
   hide(); setTimeout(hide,500);
 }
 
 function addIOSFullscreenButton(){
-  if(!isIOS()) return;
-  if(params.get("fs")==="1") return;
+  if(!isIOS())return;
+  if(params.get("fs")==="1")return;
 
   const corner=document.querySelector('.mapboxgl-ctrl-bottom-right');
-  if(!corner) return;
+  if(!corner)return;
 
-  const navGroup=[...corner.querySelectorAll('.mapboxgl-ctrl-group')]
+  const group=[...corner.querySelectorAll('.mapboxgl-ctrl-group')]
     .find(g=>g.querySelector('.mapboxgl-ctrl-zoom-in'));
-  if(!navGroup) return;
+  if(!group)return;
 
   const btn=document.createElement('button');
   btn.className='mapboxgl-ctrl-icon ios-fs-btn';
-  btn.id='iosFullscreenBtn';
-
   btn.innerHTML=`
     <svg viewBox="0 0 24 24">
       <polyline points="4,9 4,4 9,4" fill="none" stroke="#000" stroke-width="2"/>
@@ -253,14 +253,11 @@ function addIOSFullscreenButton(){
       <polyline points="20,15 20,20 15,20" fill="none" stroke="#000" stroke-width="2"/>
     </svg>`;
 
-  const zoomOut=navGroup.querySelector('.mapboxgl-ctrl-zoom-out');
-  const compass=navGroup.querySelector('.mapboxgl-ctrl-compass');
+  const zoomOut=group.querySelector('.mapboxgl-ctrl-zoom-out');
+  const compass=group.querySelector('.mapboxgl-ctrl-compass');
 
-  if(zoomOut){
-    navGroup.insertBefore(btn, compass || zoomOut.nextSibling);
-  } else {
-    navGroup.appendChild(btn);
-  }
+  if(zoomOut){ group.insertBefore(btn,compass||zoomOut.nextSibling); }
+  else { group.appendChild(btn); }
 
   btn.onclick=()=>{
     const url=new URL(location.href);
@@ -269,8 +266,9 @@ function addIOSFullscreenButton(){
   };
 }
 
-map.on('load', addIOSFullscreenButton);
+map.on("load",addIOSFullscreenButton);
 
+/* ===== ICONS ===== */
 const icons={
   clock:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>`,
   length:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h18M3 16h18"/><path d="M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>`,
@@ -279,6 +277,7 @@ const icons={
   directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/marker-svgrepo-com.svg">`
 };
 
+/* ===== POPUP CONTENT ===== */
 function specsHTML(s,u){
   return `
     <div class="specs">
@@ -300,11 +299,12 @@ function popupHtmlFor(h){
       <div class="img-wrap"><img src="${h.photo}" alt="${h.name}"></div>
       <div class="popup-body">
         <div class="popup-heading">${h.name}</div>
-        ${specsHTML(h.specs,{hikeUrl:h.hikeUrl, directionsUrl:h.directionsUrl})}
+        ${specsHTML(h.specs,{hikeUrl:h.hikeUrl,directionsUrl:h.directionsUrl})}
       </div>
     </div>`;
 }
 
+/* ===== GPX LOADER ===== */
 async function loadGpx(url){
   const res=await fetch(url);
   const xml=new DOMParser().parseFromString(await res.text(),"text/xml");
@@ -312,26 +312,27 @@ async function loadGpx(url){
   return gj.features.find(f=>f.geometry?.type==="LineString");
 }
 
+/* ===== HOVER SYSTEM ===== */
 const routeLayerId={};
 const markerElsById={};
 let hoveredId=null;
 
-function setMarkerColor(id,color){
+function setMarkerColor(id,c){
   const el=markerElsById[id];
-  if(!el) return;
+  if(!el)return;
   const p=el.querySelector("svg path");
-  if(p) p.setAttribute("fill",color);
+  if(p)p.setAttribute("fill",c);
 }
 
-function setRouteColor(id,color){
+function setRouteColor(id,c){
   const lyr=routeLayerId[id];
-  if(lyr && map.getLayer(lyr))
-    map.setPaintProperty(lyr,"line-color",color);
+  if(lyr&&map.getLayer(lyr))map.setPaintProperty(lyr,"line-color",c);
 }
 
 function applyHoverState(){
   Object.keys(routeLayerId).forEach(id=>setRouteColor(id,RED));
   Object.keys(markerElsById).forEach(id=>setMarkerColor(id,RED));
+
   if(hoveredId){
     setRouteColor(hoveredId,BLUE);
     setMarkerColor(hoveredId,BLUE);
@@ -341,13 +342,18 @@ function applyHoverState(){
   }
 }
 
-function setHovered(id){ hoveredId=id; applyHoverState(); }
+function setHovered(id){
+  hoveredId=id;
+  applyHoverState();
+}
 
 function addRoute(id,line){
   const src=`route-src-${id}`;
   const lyr=`route-lyr-${id}`;
+
   if(!map.getSource(src))
     map.addSource(src,{type:"geojson",data:line});
+
   if(!map.getLayer(lyr))
     map.addLayer({
       id:lyr,
@@ -357,13 +363,15 @@ function addRoute(id,line){
         "line-color":RED,
         "line-width":3,
         "line-opacity":0.95,
-        "line-color-transition":{ duration:0 }
+        "line-color-transition":{duration:0}
       }
     });
+
   routeLayerId[id]=lyr;
 }
 
-map.on("load", async () => {
+/* ===== MAP LOAD ===== */
+map.on("load", async ()=>{
   const bounds=new mapboxgl.LngLatBounds();
 
   hikes.forEach(h=>{
@@ -372,10 +380,10 @@ map.on("load", async () => {
       closeButton:false
     }).setHTML(popupHtmlFor(h));
 
-    popup.on('open',()=>{
+    popup.on("open",()=>{
       if(window.innerWidth<600){
         const ll=popup.getLngLat();
-        map.easeTo({ center:ll, offset:[0,-80], duration:400 });
+        map.easeTo({center:ll,offset:[0,-80],duration:400});
       }
     });
 
@@ -408,9 +416,10 @@ map.on("load", async () => {
 
   const isMobile=window.innerWidth<600;
 
+  /* <<<<< THIS IS THE ZOOM CHANGE YOU ASKED FOR >>>>> */
   map.fitBounds(bounds,{
     padding:isMobile?30:110,
-    maxZoom:isMobile?14:11
+    maxZoom:isMobile?14:10   /* DESKTOP ZOOM OUT */
   });
 
   if(isMobile){
@@ -422,5 +431,3 @@ map.on("load", async () => {
 </script>
 </body>
 </html>
-
-
