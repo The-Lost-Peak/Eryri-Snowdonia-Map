@@ -67,24 +67,19 @@
       transform:translateY(-1px);
     }
 
-    .popup-heading{ font-weight:800; font-size:13px; margin:2px 0 6px 0; color:#1E1E1E }
-    .specs{ font-size:12px; display:flex; flex-direction:column; gap:3px; align-items:center; margin-top:2px }
-    .stats-group{ display:flex; flex-direction:column; gap:3px; align-items:center }
+    /* DESKTOP — Eryri original sizes */
+    .popup-heading{ font-weight:800; font-size:11px; margin:2px 0 6px 0; color:#1E1E1E }
+    .specs{ font-size:10px; display:flex; flex-direction:column; gap:3px; align-items:center; transform:translateY(1px); margin-top:2px }
+    .stats-group{ transform:translateY(-2px); display:flex; flex-direction:column; gap:3px; align-items:center }
     .links-group{ display:flex; flex-direction:column; gap:3px; align-items:center }
-
     .spec-row{ display:flex; align-items:center; justify-content:center; gap:4px }
     .icon{ width:16px; height:16px }
-    .icon-red{ color:#EC2629 }
-    .icon-blue{ color:#3899EC }
-
-    .icon-img{
-      width:12px; height:12px; display:block;
-      filter: invert(41%) sepia(97%) saturate(1476%) hue-rotate(191deg) brightness(96%) contrast(101%);
-    }
-
-    .spec-value{ font-weight:800; color:#EC2629; font-size:13px }
-    .popup-link{ color:#3899EC; font-weight:800; font-size:13px; text-decoration:none }
-    a:focus{ outline:none !important }
+    .icon-red{ color:#EC2629 } .icon-blue{ color:#3899EC }
+    .icon-img{ width:12px; height:12px; display:block; filter: invert(41%) sepia(97%) saturate(1476%) hue-rotate(191deg) brightness(96%) contrast(101%) }
+    .spec-value{ font-weight:800; color:#EC2629; font-size:11px }
+    .popup-link{ color:#3899EC; font-weight:800; font-size:11px; text-decoration:none }
+    .hike-gap{ margin-top:2px }
+    .mapboxgl-ctrl-fullscreen .mapboxgl-ctrl-icon { transform:scale(0.88); transform-origin:center }
 
     #iosFullscreenBtn svg{
       width:20px; height:20px; display:block;
@@ -92,7 +87,7 @@
       margin:0 auto;
     }
 
-    /* ===== MOBILE NORMAL POPUP ===== */
+    /* ===== MOBILE NORMAL POPUP (Peak District mobile) ===== */
     @media (max-width:440px){
       .popup-card{ height:115px !important }
       .img-wrap{ width:105px !important; flex-basis:105px !important; height:115px !important }
@@ -111,7 +106,7 @@
       .icon-img{ width:9px !important; height:9px !important }
     }
 
-    /* ===== FULLSCREEN POPUP — 15% LARGER BASE ===== */
+    /* ===== FULLSCREEN POPUP — 15% LARGER BASE (Peak District mobile) ===== */
     @media (max-width:440px){
       body.ios-fullscreen .popup-card{
         height:calc(115px * 1.15) !important;
@@ -128,7 +123,6 @@
         padding:calc(4px * 1.15) calc(6px * 1.15) !important;
       }
 
-      /* BASE fullscreen text (before +1px) */
       body.ios-fullscreen .popup-heading{ font-size:calc(9.5px * 1.15) !important }
       body.ios-fullscreen .specs{ font-size:calc(8.5px * 1.15) !important }
       body.ios-fullscreen .spec-value{ font-size:calc(9.5px * 1.15) !important }
@@ -144,25 +138,12 @@
       }
     }
 
-    /* ===== FULLSCREEN POPUP — SAFE +1PX TEXT ONLY ===== */
+    /* ===== FULLSCREEN POPUP — SAFE +1PX TEXT ONLY (Peak District mobile) ===== */
     @media (max-width:440px){
-
-      body.ios-fullscreen .popup-heading{
-        font-size:calc(9.5px * 1.15 + 1px) !important;
-      }
-
-      body.ios-fullscreen .specs{
-        font-size:calc(8.5px * 1.15 + 1px) !important;
-      }
-
-      body.ios-fullscreen .spec-value{
-        font-size:calc(9.5px * 1.15 + 1px) !important;
-      }
-
-      body.ios-fullscreen .popup-link{
-        font-size:calc(10px * 1.15 + 1px) !important;
-      }
-
+      body.ios-fullscreen .popup-heading{ font-size:calc(9.5px * 1.15 + 1px) !important }
+      body.ios-fullscreen .specs{ font-size:calc(8.5px * 1.15 + 1px) !important }
+      body.ios-fullscreen .spec-value{ font-size:calc(9.5px * 1.15 + 1px) !important }
+      body.ios-fullscreen .popup-link{ font-size:calc(10px * 1.15 + 1px) !important }
     }
 
   </style>
@@ -230,36 +211,29 @@ const nav = new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav, "bottom-right");
 map.addControl(new mapboxgl.FullscreenControl(), "bottom-right");
 
+/* ——— iOS fullscreen behaviour from Peak District ——— */
 function isIOS(){
   const ua = navigator.userAgent || "";
   const platform = navigator.platform || "";
   return /iPad|iPhone|iPod/.test(ua) || (platform==="MacIntel" && navigator.maxTouchPoints>1);
 }
-
 const params=new URLSearchParams(location.search);
-
 if(isIOS() && params.get("fs")==="1"){
   document.body.classList.add("ios-fullscreen");
-
   const hide=()=>{
     const el=document.querySelector('.mapboxgl-ctrl-fullscreen');
     if(el) el.style.display='none';
   };
   hide(); setTimeout(hide,500);
 }
-
 function addIOSFullscreenButton(){
   if(!isIOS()) return;
   if(params.get("fs")==="1") return;
-
   const corner=document.querySelector('.mapboxgl-ctrl-bottom-right');
   if(!corner) return;
-
   const navGroup=[...corner.querySelectorAll('.mapboxgl-ctrl-group')]
     .find(g=>g.querySelector('.mapboxgl-ctrl-zoom-in'));
-
   if(!navGroup) return;
-
   const btn=document.createElement('button');
   btn.className='mapboxgl-ctrl-icon ios-fs-btn';
   btn.id='iosFullscreenBtn';
@@ -270,25 +244,22 @@ function addIOSFullscreenButton(){
       <polyline points="4,15 4,20 9,20" fill="none" stroke="#000" stroke-width="2"/>
       <polyline points="20,15 20,20 15,20" fill="none" stroke="#000" stroke-width="2"/>
     </svg>`;
-
   const zoomOut=navGroup.querySelector('.mapboxgl-ctrl-zoom-out');
   const compass=navGroup.querySelector('.mapboxgl-ctrl-compass');
-
   if(zoomOut){
     navGroup.insertBefore(btn, compass || zoomOut.nextSibling);
   } else {
     navGroup.appendChild(btn);
   }
-
   btn.onclick=()=>{
     const url=new URL(location.href);
     url.searchParams.set("fs","1");
     window.open(url.toString(),"_blank");
   };
 }
-
 map.on('load', addIOSFullscreenButton);
 
+/* ——— Icons ——— */
 const icons={
   clock:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg>`,
   length:`<svg class="icon icon-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h18M3 16h18"/><path d="M6 8v8M10 8v8M14 8v8M18 8v8"/></svg>`,
@@ -297,6 +268,7 @@ const icons={
   directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/marker-svgrepo-com.svg">`
 };
 
+/* ——— Popup HTML ——— */
 function specsHTML(s,u){
   return `
     <div class="specs">
@@ -306,12 +278,11 @@ function specsHTML(s,u){
         <div class="spec-row">${icons.ascent}<span class="spec-value">${s.ascent}</span></div>
       </div>
       <div class="links-group">
-        <div class="spec-row">${icons.walk}<a class="popup-link" href="${u.hikeUrl}" target="_blank">Hike Page</a></div>
+        <div class="spec-row hike-gap">${icons.walk}<a class="popup-link" href="${u.hikeUrl}" target="_blank">Hike Page</a></div>
         <div class="spec-row">${icons.directions}<a class="popup-link" href="${u.directionsUrl}" target="_blank">Directions</a></div>
       </div>
     </div>`;
 }
-
 function popupHtmlFor(h){
   return `
     <div class="popup-card">
@@ -323,6 +294,7 @@ function popupHtmlFor(h){
     </div>`;
 }
 
+/* ——— GPX loader ——— */
 async function loadGpx(url){
   const res=await fetch(url);
   const xml=new DOMParser().parseFromString(await res.text(),"text/xml");
@@ -330,6 +302,8 @@ async function loadGpx(url){
   return gj.features.find(f=>f.geometry?.type==="LineString");
 }
 
+/* ——— Routes ——— */
+const routeLayerId = {};           // id -> layer id
 function addRoute(id,line){
   const src=`route-src-${id}`;
   const lyr=`route-lyr-${id}`;
@@ -340,13 +314,48 @@ function addRoute(id,line){
       id:lyr,
       type:"line",
       source:src,
-      paint:{ "line-color":RED,"line-width":3,"line-opacity":0.95 }
+      paint:{
+        "line-color":RED,
+        "line-width":3,
+        "line-opacity":0.95,
+        "line-color-transition":{ duration:0 }   // instant color switch on hover
+      }
     });
+  routeLayerId[id]=lyr;
 }
 
+/* ——— Hover system (markers + routes) ——— */
+const markerElsById = {};  // id -> HTMLElement
+let hoveredId = null;
+
+function setMarkerColor(id,color){
+  const el = markerElsById[id];
+  if(!el) return;
+  const p = el.querySelector("svg path");
+  if(p) p.setAttribute("fill", color);
+}
+function setRouteColor(id,color){
+  const lyr = routeLayerId[id];
+  if(lyr && map.getLayer(lyr)) map.setPaintProperty(lyr,"line-color",color);
+}
+function applyHoverState(){
+  Object.keys(routeLayerId).forEach(id=>setRouteColor(id,RED));
+  Object.keys(markerElsById).forEach(id=>setMarkerColor(id,RED));
+  if(hoveredId){
+    setRouteColor(hoveredId,BLUE);
+    setMarkerColor(hoveredId,BLUE);
+    map.getCanvas().style.cursor="pointer";
+  }else{
+    map.getCanvas().style.cursor="";
+  }
+}
+function setHovered(id){ hoveredId=id; applyHoverState(); }
+
+/* ——— Map load ——— */
 map.on("load", async () => {
   const bounds=new mapboxgl.LngLatBounds();
 
+  // Markers + popups
   hikes.forEach(h=>{
     const popup=new mapboxgl.Popup({
       offset:22,
@@ -360,31 +369,42 @@ map.on("load", async () => {
       }
     });
 
-    new mapboxgl.Marker({color:RED})
+    const marker = new mapboxgl.Marker({color:RED})
       .setLngLat(h.coords)
       .setPopup(popup)
       .addTo(map);
 
+    const el = marker.getElement();
+    el.classList.add("marker");
+    markerElsById[h.id]=el;
+
+    // Hover listeners on marker
+    el.addEventListener("mouseenter",()=>setHovered(h.id));
+    el.addEventListener("mouseleave",()=>setHovered(null));
+
     bounds.extend(h.coords);
   });
 
+  // Routes + hover on routes
   await Promise.all(hikes.map(async h=>{
     try{
       const line=await loadGpx(h.gpx);
       if(line){
         addRoute(h.id,line);
         line.geometry.coordinates.forEach(c=>bounds.extend(c));
+
+        map.on("mouseenter", routeLayerId[h.id], ()=>setHovered(h.id));
+        map.on("mouseleave", routeLayerId[h.id], ()=>setHovered(null));
       }
     }catch{}
   }));
 
+  // Fit like Peak District
   const isMobile=window.innerWidth<600;
-
   map.fitBounds(bounds,{
     padding:isMobile?30:110,
     maxZoom:isMobile?14:11
   });
-
   if(isMobile){
     map.once("idle",()=>{
       if(map.getZoom()>11.6) map.setZoom(11.6);
