@@ -210,9 +210,12 @@ const map=new mapboxgl.Map({
   container:"map",
   style:"mapbox://styles/mapbox/satellite-streets-v12",
   center:[-4.02,53.08],
-  zoom:10, /* initial zoom doesn't matter much because fitBounds overrides it */
+  zoom:10,
   attributionControl:false
 });
+
+/* SINGLE NON-COMPACT ATTRIBUTION */
+map.addControl(new mapboxgl.AttributionControl({ compact:false }), "bottom-right");
 
 const nav=new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav,"bottom-right");
@@ -416,10 +419,9 @@ map.on("load", async ()=>{
 
   const isMobile=window.innerWidth<600;
 
-  /* <<<<< THIS IS THE ZOOM CHANGE YOU ASKED FOR >>>>> */
   map.fitBounds(bounds,{
     padding:isMobile?30:110,
-    maxZoom:isMobile?14:10   /* DESKTOP ZOOM OUT */
+    maxZoom:isMobile?14:10
   });
 
   if(isMobile){
