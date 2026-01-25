@@ -219,7 +219,12 @@ const map=new mapboxgl.Map({
   attributionControl:false
 });
 
-map.addControl(new mapboxgl.AttributionControl({ compact:false }),"bottom-right");
+const isMobileAttribution = window.innerWidth <= 440;
+
+map.addControl(
+  new mapboxgl.AttributionControl({ compact: isMobileAttribution }),
+  "bottom-right"
+);
 
 const nav=new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav,"bottom-right");
