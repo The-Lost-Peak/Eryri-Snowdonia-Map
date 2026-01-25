@@ -11,13 +11,6 @@
     html, body { margin:0; height:100% }
     #map { position:absolute; inset:0 }
 
-    .mapboxgl-ctrl-logo,
-    .mapboxgl-ctrl-attrib,
-    .mapboxgl-ctrl-attrib-inner {
-      display:none !important;
-      visibility:hidden !important;
-    }
-
     .marker{ cursor:pointer !important }
     .marker svg{ transform:scale(0.85); transform-origin:center }
 
@@ -85,7 +78,7 @@
     .popup-link{ color:#3899EC; font-weight:800; font-size:11px; text-decoration:none }
     .hike-gap{ margin-top:2px }
 
-    /* ===== MOBILE POPUP (PEAK DISTRICT) ===== */
+    /* ===== MOBILE POPUP ===== */
     @media(max-width:440px){
       .popup-card{ height:115px !important }
       .img-wrap{ width:105px !important; flex-basis:105px !important; height:115px !important }
@@ -104,7 +97,7 @@
       .icon-img{ width:9px !important; height:9px !important }
     }
 
-    /* ===== FULLSCREEN MOBILE POPUP (PEAK DISTRICT) ===== */
+    /* ===== FULLSCREEN MOBILE POPUP ===== */
     @media(max-width:440px){
       body.ios-fullscreen .popup-card{ height:calc(115px * 1.15) !important }
       body.ios-fullscreen .img-wrap{
@@ -127,29 +120,43 @@
       body.ios-fullscreen .icon-img{ width:calc(9px * 1.15) !important; height:calc(9px * 1.15) !important }
     }
 
-    /* ===== SAFE +1PX FULLSCREEN TEXT ===== */
-    @media(max-width:440px){
-      body.ios-fullscreen .popup-heading{ font-size:calc(9.5px * 1.15 + 1px) !important }
-      body.ios-fullscreen .specs{ font-size:calc(8.5px * 1.15 + 1px) !important }
-      body.ios-fullscreen .spec-value{ font-size:calc(9.5px * 1.15 + 1px) !important }
-      body.ios-fullscreen .popup-link{ font-size:calc(10px * 1.15 + 1px) !important }
-    }
-
-    /* ===== REMOVE TAP/FOCUS HIGHLIGHTS GLOBALLY ===== */
+    /* ===== REMOVE TAP/FOCUS ===== */
     .popup-link,
     .popup-link:focus,
     .popup-link:active,
-    .popup-link:focus-visible {
-      background: transparent !important;
-      outline: none !important;
-      border: none !important;
-      box-shadow: none !important;
+    .popup-link:focus-visible{
+      background:transparent !important;
+      outline:none !important;
+      border:none !important;
+      box-shadow:none !important;
     }
 
-    .popup-link, .popup-link * {
-      -webkit-tap-highlight-color: transparent !important;
-      -webkit-touch-callout: none !important;
-      -webkit-user-select: none !important;
+    .popup-link, .popup-link *{
+      -webkit-tap-highlight-color:transparent !important;
+      -webkit-touch-callout:none !important;
+      -webkit-user-select:none !important;
+    }
+
+    /* ===== BOTTOM RIGHT STACK (MATCH PEAK DISTRICT) ===== */
+    .mapboxgl-ctrl-bottom-right{
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:flex-end !important;
+      gap:6px !important;
+    }
+
+    .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-group,
+    .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-fullscreen{
+      order:1;
+    }
+
+    .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib{
+      order:2;
+    }
+
+    /* ===== ATTRIBUTION OFFSET ===== */
+    .mapboxgl-ctrl-attrib{
+      transform: translate(-1px, 3px);
     }
   </style>
 </head>
@@ -171,12 +178,11 @@ const IMG={
   llynDinas:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/images/llyn-dinas.jpg"
 };
 
-/* ===== HIKES (WITH UPDATED COORDS) ===== */
 const hikes=[
   {
     id:"snowdon-llanberis",
     name:"Snowdon Via The Llanberis Path",
-    coords:[-4.118924210708925, 53.11664400159144],
+    coords:[-4.118924210708925,53.11664400159144],
     hikeUrl:"https://thelostpeak.co.uk/hikes/snowdon-llanberis",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.11664400159144,-4.118924210708925",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Snowdon%20Via%20The%20Llanberis%20Path.gpx",
@@ -186,7 +192,7 @@ const hikes=[
   {
     id:"cwm-idwal",
     name:"Cwm Idwal Hike",
-    coords:[-4.020596516220583, 53.12408370096376],
+    coords:[-4.020596516220583,53.12408370096376],
     hikeUrl:"https://thelostpeak.co.uk/hikes/cwm-idwal",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=53.12408370096376,-4.020596516220583",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Cwm%20Idwal%20Hike.gpx",
@@ -196,7 +202,7 @@ const hikes=[
   {
     id:"aberglaslyn",
     name:"Aberglaslyn, Llyn Dinas & Beddgelert",
-    coords:[-4.091522763013294, 52.99473100666257],
+    coords:[-4.091522763013294,52.99473100666257],
     hikeUrl:"https://thelostpeak.co.uk/hikes/aberglaslyn-llyn-dinas-beddgelert",
     directionsUrl:"https://www.google.com/maps/dir/?api=1&destination=52.99473100666257,-4.091522763013294",
     gpx:"https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/refs/heads/main/gpx/Aberglaslyn%2C%20Llyn%20Dinas%20%26%20Beddgelert.gpx",
@@ -205,7 +211,6 @@ const hikes=[
   }
 ];
 
-/* ===== MAP ===== */
 const map=new mapboxgl.Map({
   container:"map",
   style:"mapbox://styles/mapbox/satellite-streets-v12",
@@ -214,14 +219,13 @@ const map=new mapboxgl.Map({
   attributionControl:false
 });
 
-/* SINGLE NON-COMPACT ATTRIBUTION */
-map.addControl(new mapboxgl.AttributionControl({ compact:false }), "bottom-right");
+map.addControl(new mapboxgl.AttributionControl({ compact:false }),"bottom-right");
 
 const nav=new mapboxgl.NavigationControl({ showCompass:true, showZoom:true });
 map.addControl(nav,"bottom-right");
 map.addControl(new mapboxgl.FullscreenControl(),"bottom-right");
 
-/* ===== FULLSCREEN (iOS SYSTEM FROM PEAK DISTRICT) ===== */
+/* ===== FULLSCREEN (iOS) ===== */
 function isIOS(){
   const ua=navigator.userAgent||"";
   const platform=navigator.platform||"";
@@ -259,8 +263,11 @@ function addIOSFullscreenButton(){
   const zoomOut=group.querySelector('.mapboxgl-ctrl-zoom-out');
   const compass=group.querySelector('.mapboxgl-ctrl-compass');
 
-  if(zoomOut){ group.insertBefore(btn,compass||zoomOut.nextSibling); }
-  else { group.appendChild(btn); }
+  if(zoomOut){
+    group.insertBefore(btn,compass||zoomOut.nextSibling);
+  }else{
+    group.appendChild(btn);
+  }
 
   btn.onclick=()=>{
     const url=new URL(location.href);
@@ -280,7 +287,6 @@ const icons={
   directions:`<img class="icon-img" src="https://raw.githubusercontent.com/remmiagbebi-beep/eryri-map/main/icons/marker-svgrepo-com.svg">`
 };
 
-/* ===== POPUP CONTENT ===== */
 function specsHTML(s,u){
   return `
     <div class="specs">
@@ -307,7 +313,6 @@ function popupHtmlFor(h){
     </div>`;
 }
 
-/* ===== GPX LOADER ===== */
 async function loadGpx(url){
   const res=await fetch(url);
   const xml=new DOMParser().parseFromString(await res.text(),"text/xml");
@@ -315,7 +320,6 @@ async function loadGpx(url){
   return gj.features.find(f=>f.geometry?.type==="LineString");
 }
 
-/* ===== HOVER SYSTEM ===== */
 const routeLayerId={};
 const markerElsById={};
 let hoveredId=null;
@@ -335,12 +339,11 @@ function setRouteColor(id,c){
 function applyHoverState(){
   Object.keys(routeLayerId).forEach(id=>setRouteColor(id,RED));
   Object.keys(markerElsById).forEach(id=>setMarkerColor(id,RED));
-
   if(hoveredId){
     setRouteColor(hoveredId,BLUE);
     setMarkerColor(hoveredId,BLUE);
     map.getCanvas().style.cursor="pointer";
-  } else {
+  }else{
     map.getCanvas().style.cursor="";
   }
 }
@@ -373,35 +376,17 @@ function addRoute(id,line){
   routeLayerId[id]=lyr;
 }
 
-/* ===== MAP LOAD ===== */
-map.on("load", async ()=>{
+map.on("load",async()=>{
   const bounds=new mapboxgl.LngLatBounds();
 
   hikes.forEach(h=>{
-    const popup=new mapboxgl.Popup({
-      offset:22,
-      closeButton:false
-    }).setHTML(popupHtmlFor(h));
-
-    popup.on("open",()=>{
-      if(window.innerWidth<600){
-        const ll=popup.getLngLat();
-        map.easeTo({center:ll,offset:[0,-80],duration:400});
-      }
-    });
-
-    const marker=new mapboxgl.Marker({color:RED})
-      .setLngLat(h.coords)
-      .setPopup(popup)
-      .addTo(map);
-
+    const popup=new mapboxgl.Popup({offset:22,closeButton:false}).setHTML(popupHtmlFor(h));
+    const marker=new mapboxgl.Marker({color:RED}).setLngLat(h.coords).setPopup(popup).addTo(map);
     const el=marker.getElement();
     el.classList.add("marker");
     markerElsById[h.id]=el;
-
     el.addEventListener("mouseenter",()=>setHovered(h.id));
     el.addEventListener("mouseleave",()=>setHovered(null));
-
     bounds.extend(h.coords);
   });
 
@@ -418,16 +403,10 @@ map.on("load", async ()=>{
   }
 
   const isMobile=window.innerWidth<600;
-
-  map.fitBounds(bounds,{
-    padding:isMobile?30:110,
-    maxZoom:isMobile?14:10
-  });
+  map.fitBounds(bounds,{padding:isMobile?30:110,maxZoom:isMobile?14:10});
 
   if(isMobile){
-    map.once("idle",()=>{
-      if(map.getZoom()>11.6) map.setZoom(11.6);
-    });
+    map.once("idle",()=>{ if(map.getZoom()>11.6) map.setZoom(11.6); });
   }
 });
 </script>
